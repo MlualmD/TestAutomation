@@ -30,6 +30,7 @@ namespace TestAutomationCourse.Exercises.e08.API
         public async Task title_of_first_post_for_userid_1_contains_facere()
         {
             RestClient client = new RestClient("https://jsonplaceholder.typicode.com/");
+
             RestRequest restRequest = new RestRequest("posts/1");
 
             var response = await client.GetAsync(restRequest);
@@ -68,6 +69,8 @@ namespace TestAutomationCourse.Exercises.e08.API
             var getTodoJson = JObject.Parse(responseTodo.Content);
 
             var objectTodo = getTodoJson["todos"][0];
+
+            Console.WriteLine(objectTodo);
 
             var todoId = (int)objectTodo["id"];
 
@@ -141,10 +144,9 @@ namespace TestAutomationCourse.Exercises.e08.API
             var response = await client.PostAsync(request);
 
             var json = JObject.Parse(response.Content);
-      
+
             var id = (int)json["id"];
 
-            RestRequest request2 = new RestRequest();
 
             var path = $"https://apichallenges.herokuapp.com/todos/{id}";
 
@@ -152,13 +154,11 @@ namespace TestAutomationCourse.Exercises.e08.API
 
             response_Todo.Todos[0].description = "change Att muuuluuuu";
 
-            request2.AddBody(response_Todo.Todos[0]);
-                
-            var res = await  client.PostJsonAsync(path, response_Todo.Todos[0]);
+            await client.PostJsonAsync(path, response_Todo.Todos[0]);
 
             RestRequest RequestTodo = new RestRequest($"/{id}");
 
-           var res1 = await client.DeleteAsync(RequestTodo);
+            var res1 = await client.DeleteAsync(RequestTodo);
 
             Assert.That(res1.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
